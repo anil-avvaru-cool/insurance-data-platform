@@ -91,3 +91,72 @@ Key decisions documented in the
 | DEC-010 | `risk_score_at_issuance` as fraud feature — the shared data spine |
 | DEC-011 | Entity resolution before graph build — normalized edges, reliable rings |
 | DEC-013 | Source datetimes in raw parquet; derived ints in feature vector — non-breaking |
+
+## Git Repository Structure
+
+```text
+insurance-data-platform/
+├── README.md
+├── docs/
+│   └── (symlinks or copies of relevant platform docs)
+│       ├── DECISION_LOG.md          ← DEC-001 through DEC-013
+│       ├── FEATURE_STORE_GUIDE.md
+│       └── DATA_GEN_GUIDE.md
+│
+├── config.py                        ← Layer 0: CREDIT_RESTRICTED_STATES,
+│                                      PSI_CURRENT_WINDOW_DAYS, PSI_MIN_RECORDS,
+│                                      QUOTE_DATE_RANGE_DAYS, OPEN_CLAIM_RATE,
+│                                      UNCONFIRMED_FRAUD_RATE
+│
+├── features/
+│   └── feature_definitions.py       ← Layer 0: feature names, null policy,
+│                                      telematics trio, state regulatory mask,
+│                                      derivation docs for policy_inception_days
+│                                      and reporting_delay_days
+│
+├── data/
+│   ├── synthetic/
+│   │   ├── archetypes_underwriting.py  ← Layer 1: 10 driver/vehicle profiles
+│   │   ├── archetypes_claims.py        ← Layer 1: 10 claim archetypes
+│   │   ├── generator.py                ← Layer 2: outputs raw parquet
+│   │   └── validator.py                ← Layer 4: temporal + null + fraud checks
+│   │
+│   ├── raw/                            ← gitignored
+│   │   ├── quotes.parquet              ← generator.py output
+│   │   └── claims.parquet              ← generator.py output
+│   │
+│   ├── entities/                       ← gitignored
+│   │   ├── vehicles.parquet            ← entity_vehicle.py output
+│   │   ├── persons.parquet             ← entity_person.py output
+│   │   ├── addresses.parquet           ← entity_address.py output
+│   │   ├── phones.parquet              ← entity_phone.py output
+│   │   └── policies.parquet            ← entity_policy.py output
+│   │
+│   └── processed/                      ← gitignored
+│       ├── quotes_features.parquet     ← offline_pipeline.py output
+│       └── claims_features.parquet     ← offline_pipeline.py + graph_features.py output
+│
+├── entities/
+│   ├── entity_vehicle.py            ← Layer 3: VIN decode, MSRP, ADAS efficacy
+│   ├── entity_person.py             ← Layer 3: dedup, role assignment
+│   ├── entity_address.py            ← Layer 3: normalize + hash
+│   ├── entity_phone.py              ← Layer 3: normalize + hash
+│   └── entity_policy.py             ← Layer 3: inception date, lapse calc,
+│                                      writes policy_inception_date
+│
+├── graph/
+│   ├── graph_builder.py             ← Layer 5: loads resolved entities
+│   │                                  as nodes/edges into Neo4j only —
+│   │                                  no feature computation here
+│   └── graph_features.py            ← Layer 6: queries Neo4j → enriches
+│                                      feature store
+│
+├── pipeline/
+│   └── offline_pipeline.py          ← Layer 6: feature_definitions +
+│                                      resolved entities → data/processed/
+│
+└── monitoring/
+    └── psi_drift.py                 ← PSI current-period window keyed on
+                                       quote_requested_at / fnol_submitted_at
+                                       reads directly from data/raw/ parquet
+```
