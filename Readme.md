@@ -54,19 +54,19 @@ appear disconnected. See [DEC-011](https://github.com/anil-avvaru-cool/redwood-a
 
 ## Status
 
-In active development — 2026 Q2.
+Completed — 2026 Q2.
 
 | Component | Status |
 |---|---|
 | `feature_definitions.py` | ✅ Complete |
 | `config.py` | ✅ Complete |
-| `archetypes_underwriting.py` | 🔨 In progress |
-| `archetypes_claims.py` | 🔨 In progress |
-| `generator.py` | 🔨 In progress |
-| `entity_*.py` (5 modules) | 🔨 In progress |
-| `validator.py` | 🔨 In progress |
-| `graph_builder.py` | 📋 Planned |
-| `offline_pipeline.py` | 📋 Planned |
+| `archetypes_underwriting.py` | ✅ Complete |
+| `archetypes_claims.py` | ✅ Complete |
+| `generator.py` | ✅ Complete |
+| `entity_*.py` (5 modules) | ✅ Complete |
+| `validator.py` | ✅ Complete |
+| `graph_builder.py` | ✅ Complete |
+| `offline_pipeline.py` | ✅ Complete |
 
 ## Roadmap
 
