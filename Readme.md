@@ -160,3 +160,8 @@ insurance-data-platform/
                                        quote_requested_at / fnol_submitted_at
                                        reads directly from data/raw/ parquet
 ```
+## Local setup
+docs/LOCAL_SETUP.md — dependency order, Docker setup, how to run the pipeline end-to-end
+
+## Troubleshooting
+docs/TROUBLESHOOTING.md

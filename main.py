@@ -107,6 +107,9 @@ def main() -> None:
             return
 
     if args.build_graph:
+        print(f"NEO4J_URI := {os.environ['NEO4J_URI']}")
+        print(f"NEO4J_USER := {os.environ['NEO4J_USER']}")
+        print(f"NEO4J_PASSWORD := {'*' * len(os.environ['NEO4J_PASSWORD'])}")
         build_graph_from_claims(CLAIMS_OUTPUT, os.environ["NEO4J_URI"], os.environ["NEO4J_USER"], os.environ["NEO4J_PASSWORD"])
         print("Graph built successfully")
         if not args.validate_data:
